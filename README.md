@@ -1,12 +1,39 @@
 # Projeto nr 17
 
-Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]() da Universidade Federal de Ubelândia.
+Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]() da Universidade Federal de Uberlândia.
+
+## Materiais utilizados
+
+- Arduino UNO R3
+- Drive Ponte H l298
+- Sensor de refletância
+- Micro motor 1000 rpm
+- Jumpers
+- Protoboard
 
 ## Etapas de desenvolvimento
 
-#### 1° Etapa
+- [x] 1° Etapa
 
-Desenvolvimento do software e protótipo para teste de estratégia de controle.
- abixo uma imagem do primeiro protótipo criado
+Desenvolvimento do software e protótipo para testes de estratégia de controle.
+Abaixo algumas imagens do primeiro protótipo criado
 
- ![]()
+![](img/nr17_001.jpg)
+
+![](img/nr17_002.jpg)
+
+**OBS:** Este primeiro protótipo foi criado apenas com o intuito de testes, este não será o robô usado na competição.
+
+## Estratégia Empregada
+
+Neste primeiro teste foi montado um array de 3 sensores. Para o controle PI desenvolvido , o setpoint é o sensor central e cada um dos laterais gera um certo erro pré- deteminado. Abaixo uma imagem do array.
+
+![](img/nr17_array_001.jpg)
+
+De acordo com os erros gerados no percurso um tratamento de software para compensar o sistema é realizado. Por tentativa e erro as constantes do compensador serão refinadas.
+
+## license
+
+## Autors
+
+Mário Borges - https://github.com/alpinista06/Setimo_TUR
