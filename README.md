@@ -13,7 +13,7 @@ Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]
 
 ## Etapas de desenvolvimento
 
-- [x] 1° Etapa
+- [x] 1° Etapa- **Prototipagem**
 
 Desenvolvimento do software e protótipo para testes de estratégia de controle.
 Abaixo algumas imagens do primeiro protótipo criado
