@@ -1,6 +1,7 @@
-# Projeto nr 17
+# Projeto nr 17 :sunglasses:
 
-Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]() da Universidade Federal de Uberlândia.
+Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]() da Universidade Federal de Uberlândia. O nome deste robô foi inspirado no grande mito, Androide nr 17 de dragon ball super :arrow_lower_left:
+![](img/nr_17.jpg)
 
 ## Materiais utilizados
 
@@ -33,6 +34,7 @@ Neste primeiro teste foi montado um array de 3 sensores. Para o controle PI dese
 De acordo com os erros gerados no percurso um tratamento de software para compensar o sistema é realizado. Por tentativa e erro as constantes do compensador serão refinadas.
 
 ## license
+
 
 ## Autors
 
