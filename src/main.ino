@@ -11,36 +11,40 @@
 /////////////////
 //Dados globais//
 ////////////////
+//Sensores//
 int sensor_1 = A0;
 int sensor_2 = A1;
 int sensor_3 = A2;
 uint8_t array_sensores = 0;
+int leitura1;
+int leitura2;
+int leitura3;
+//Compensador PID//
 int A = 5;
-int Kp = 20;
-int Ki = 30;
+int Kp = 5;
+int Ki = 10;
+int Kd = 2;
 int resposta_p;
 int resposta_i;
-int Kpi = 50;
-int Resposta_PI;
-int respPI;
-int Vplus, Vless;
-int IN0A, IN1A, IN0B, IN1B;
-int ENA = 9; // motor esquerdo
-int ENB = 10; //motor direito
+int resposta_d;
+int Resposta_PID;
 int erro_array;
 int amostra_atual;
 int amostra_anterior = 0;
 int erro_atual;
 int erro_anterior = 0;
+//Velocidade//
+int respPI;
+int Vplus, Vless;
+int IN0A, IN1A, IN0B, IN1B;
+int ENA = 9; // motor esquerdo
+int ENB = 10; //motor direito
 //declaracao dos motores
 int motor1_a = 4;
 int motor1_b = 6;
 int motor2_a = 5;
 int motor2_b = 7;
 
-int leitura1;
-int leitura2;
-int leitura3;
 
 
 
@@ -55,7 +59,7 @@ void frente() {
   digitalWrite(motor2_b , HIGH);
 }
 
-int giro_a_esquerda(int respPI)
+void giro_a_esquerda(int respPI)
 {
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
@@ -69,7 +73,7 @@ int giro_a_esquerda(int respPI)
   // delay(2000);
 }
 
-int giro_a_direita(int respPI)
+void giro_a_direita(int respPI)
 {
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
@@ -83,7 +87,7 @@ int giro_a_direita(int respPI)
   // delay(2000);
 }
 
-int motores_parados()
+void motores_parados()
 {
   digitalWrite(motor1_a , HIGH);
   digitalWrite(motor1_b , HIGH);
@@ -168,16 +172,18 @@ void loop() {
   Serial.print(erro_array);
   Serial.print("  ");
 #endif
-  //Compensador PI//
+  //Compensador PID//
   erro_atual = erro_array;
   resposta_p = erro_atual * Kp;
   resposta_i = resposta_i + erro_atual * Ki * A;
-  Resposta_PI = resposta_p + resposta_i;
+  resposta_d = Kd * (erro_atual - erro_anterior);
+  Resposta_PID = resposta_p + resposta_i + resposta_d;
+  erro_anterior = erro_atual;
 #ifdef Mostrar_valores
   Serial.print("\t");
-  Serial.print("Resposta PI:");
+  Serial.print("Resposta PID:");
   Serial.print("  ");
-  Serial.print(Resposta_PI);
+  Serial.print(Resposta_PID);
   Serial.print("  ");
 #endif
   //main//
@@ -185,16 +191,16 @@ void loop() {
     frente();
   }
   if (erro_array == 1) {
-    giro_a_esquerda(Resposta_PI);
+    giro_a_esquerda(Resposta_PID);
   }
   if (erro_array == 2) {
-    giro_a_esquerda(Resposta_PI);
+    giro_a_esquerda(Resposta_PID);
   }
   if (erro_array == -1) {
-    giro_a_direita(Resposta_PI);
+    giro_a_direita(Resposta_PID);
   }
   if (erro_array == -2) {
-    giro_a_direita(Resposta_PI);
+    giro_a_direita(Resposta_PID);
   }
 #ifdef Mostrar_valores
   Serial.print("\t");
