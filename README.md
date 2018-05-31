@@ -1,6 +1,6 @@
-# Projeto nr 17 :sunglasses:
+# Projeto nr 17
 
-Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]() da Universidade Federal de Uberlândia. O nome deste robô foi inspirado no grande mito, Androide nr 17 de dragon ball super :arrow_lower_left:
+Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]() da Universidade Federal de Uberlândia. O nome deste robô foi inspirado no grande mito, Androide nr 17 de dragon ball super 
 ![](img/nr_17.jpg)
 
 ## Materiais utilizados
