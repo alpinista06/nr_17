@@ -23,11 +23,11 @@ Abaixo algumas imagens do primeiro protótipo criado
 
 ![](img/nr17_002.jpg)
 
-**OBS:** Este primeiro protótipo foi criado apenas com o intuito de testes, este não será o robô usado na competição.
+**OBS:** Este primeiro protótipo foi criado apenas com o intuito de testes prévios, este não será o robô usado na competição.
 
 ## Estratégia Empregada
 
-Neste primeiro teste foi montado um array de 3 sensores. Para o controle PI desenvolvido , o setpoint é o sensor central e cada um dos laterais gera um certo erro pré- deteminado. Abaixo uma imagem do array.
+Neste primeiro teste foi montado um array de 3 sensores. Para o controle PID desenvolvido , o setpoint é o sensor central e cada um dos laterais gera um certo erro pré-deteminado. Abaixo uma imagem do array.
 
 ![](img/nr17_array_001.jpg)
 
@@ -38,4 +38,4 @@ De acordo com os erros gerados no percurso um tratamento de software para compen
 
 ## Autors
 
-Mário Borges - https://github.com/alpinista06/Setimo_TUR
+Mário Borges - https://github.com/alpinista06
