@@ -2,11 +2,11 @@
 //Defines//
 ///////////
 #define limiar_sensores 800
-#define velocidade 40
+//#define velocidade 85
 
 //#define teste_sensores
-#define main
-#define Mostrar_valores
+#define principal
+//#define Mostrar_valores
 
 /////////////////
 //Dados globais//
@@ -20,26 +20,27 @@ int leitura1;
 int leitura2;
 int leitura3;
 //Compensador PID//
-int A = 5;
-int Kp = 5;
-int Ki = 10;
-int Kd = 2;
+int A = 0.5;
+int Kp = 20;
+int Ki = 35;
+int Kd = 15;
 int resposta_p;
 int resposta_i;
 int resposta_d;
 int Resposta_PID;
 int erro_array;
 int amostra_atual;
-int amostra_anterior = 0;
+int amostra_anterior;
 int erro_atual;
-int erro_anterior = 0;
+int erro_anterior;
 //Velocidade//
+int velocidade = 0;
 int respPI;
 int Vplus, Vless;
 int IN0A, IN1A, IN0B, IN1B;
 int ENA = 9; // motor esquerdo
 int ENB = 10; //motor direito
-//declaracao dos motores
+//declaracao dos motores//
 int motor1_a = 4;
 int motor1_b = 6;
 int motor2_a = 5;
@@ -50,6 +51,7 @@ int motor2_b = 7;
 
 void frente() {
 
+  velocidade = 80;
   analogWrite(ENA, abs(velocidade) );
   analogWrite(ENB, abs(velocidade) );
 
@@ -61,10 +63,11 @@ void frente() {
 
 void giro_a_esquerda(int respPI)
 {
+  velocidade = 135;
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
-  analogWrite(ENA, abs(Vplus) );
-  analogWrite(ENB, abs(Vless) );
+  analogWrite(ENA, Vplus );
+  analogWrite(ENB, Vless );
 
   digitalWrite(motor1_a , HIGH);
   digitalWrite(motor1_b , LOW);
@@ -75,10 +78,11 @@ void giro_a_esquerda(int respPI)
 
 void giro_a_direita(int respPI)
 {
+  velocidade = 135;
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
-  analogWrite(ENA, abs(Vless) );
-  analogWrite(ENB, abs(Vplus) );
+  analogWrite(ENA, Vless );
+  analogWrite(ENB, Vplus );
 
   digitalWrite(motor1_a , LOW);
   digitalWrite(motor1_b , LOW);
@@ -118,7 +122,7 @@ void loop() {
   Serial.println();
 #endif
 
-#ifdef main
+#ifdef principal
   //Bloco de montagem das estrutura do array_sensores//
   if (leitura1 > limiar_sensores && leitura2 > limiar_sensores && leitura3 > limiar_sensores)
   {
@@ -160,7 +164,7 @@ void loop() {
     erro_array = -1;
 
   } else if (array_sensores == 0b111) {
-    erro_array = 0;
+    erro_array = 3;
 
   } else if (array_sensores == 0b000) {
     erro_array = 0;
@@ -186,7 +190,7 @@ void loop() {
   Serial.print(Resposta_PID);
   Serial.print("  ");
 #endif
-  //main//
+  //principal//
   if (erro_array == 0) {
     frente();
   }
@@ -201,6 +205,10 @@ void loop() {
   }
   if (erro_array == -2) {
     giro_a_direita(Resposta_PID);
+  }
+  if (erro_array == 3) {
+    motores_parados();
+    delay(5000);
   }
 #ifdef Mostrar_valores
   Serial.print("\t");
