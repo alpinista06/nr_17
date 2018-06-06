@@ -2,7 +2,6 @@
 //Defines//
 ///////////
 #define limiar_sensores 800
-//#define velocidade 85
 
 //#define teste_sensores
 #define principal
@@ -61,6 +60,36 @@ void frente() {
   digitalWrite(motor2_b , HIGH);
 }
 
+//curva compensada à esquerda//
+void curva_a_esquerda(int respPI) {
+
+  velocidade = 80;
+  Vplus = velocidade + respPI;
+  Vless = velocidade - respPI;
+  analogWrite(ENA, Vplus );
+  analogWrite(ENB, Vless );
+
+  digitalWrite(motor1_a , HIGH);
+  digitalWrite(motor1_b , LOW);
+  digitalWrite(motor2_a , LOW);
+  digitalWrite(motor2_b , HIGH);
+}
+//curva compensada à direita//
+void curva_a_direita(int respPI) {
+
+  velocidade = 80;
+  Vplus = velocidade + respPI;
+  Vless = velocidade - respPI;
+  analogWrite(ENA, Vless );
+  analogWrite(ENB, Vplus );
+
+  digitalWrite(motor1_a , HIGH);
+  digitalWrite(motor1_b , LOW);
+  digitalWrite(motor2_a , LOW);
+  digitalWrite(motor2_b , HIGH);
+}
+
+//Giro a esquerda desligando um dos motores//
 void giro_a_esquerda(int respPI)
 {
   velocidade = 135;
@@ -75,7 +104,7 @@ void giro_a_esquerda(int respPI)
   digitalWrite(motor2_b , LOW);
   // delay(2000);
 }
-
+//Giro a direita desligando um dos motores//
 void giro_a_direita(int respPI)
 {
   velocidade = 135;
@@ -195,16 +224,16 @@ void loop() {
     frente();
   }
   if (erro_array == 1) {
-    giro_a_esquerda(Resposta_PID);
+    curva_a_esquerda(Resposta_PID);
   }
   if (erro_array == 2) {
-    giro_a_esquerda(Resposta_PID);
+    curva_a_esquerda(Resposta_PID);
   }
   if (erro_array == -1) {
-    giro_a_direita(Resposta_PID);
+    curva_a_direita(Resposta_PID);
   }
   if (erro_array == -2) {
-    giro_a_direita(Resposta_PID);
+    curva_a_direita(Resposta_PID);
   }
   if (erro_array == 3) {
     motores_parados();
