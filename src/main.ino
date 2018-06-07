@@ -119,13 +119,13 @@ void mpu6050_update(){
 */
 int8_t mpu6050_verify(uint8_t eixo=1, uint8_t limiar=15){
   if(abs(euler[eixo] * 180/M_PI) < limiar){
-    //digitalWrite(LED_PIN, 0); //E estabiliza
+    digitalWrite(13, 0); //E estabiliza
     return 0;
   } else if(euler[eixo] * 180/M_PI < -limiar){
-    //digitalWrite(LED_PIN, 1); //E sobe
+    digitalWrite(13, 1); //E sobe
     return 1;
   } else if(euler[eixo] * 180/M_PI > limiar){
-    //digitalWrite(LED_PIN, 1); //E desce
+    digitalWrite(13, 1); //E desce
     return -1;
   } else {
     //Caso não for contemplado acima
@@ -282,6 +282,7 @@ void motores_parados()
 void setup() {
 
   Serial.begin(9600);
+  pinMode(13, OUTPUT);
   mpu6050_init();
 
 }
