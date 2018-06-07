@@ -44,112 +44,112 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 int numbPackets;
 
 /**
- * Inicializa a comunicação I2C
- * Inicializa o sensor
- * Configura os dados de calibração
- */
+* Inicializa a comunicação I2C
+* Inicializa o sensor
+* Configura os dados de calibração
+*/
 void mpu6050_init() {
-    //Sensor Inercial
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    Wire.begin();
-    Wire.setClock(200000); //NOTE: Ajustar de acordo com arduino utilizado
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-    Fastwire::setup(400, true);
-    #endif
-    if (mpu.testConnection()) {
-        mpu.initialize(); //Initializes the IMU
-        uint8_t ret = mpu.dmpInitialize(); //Initializes the DMP
-        delay(50);
-        if (ret == 0) {
-            mpu.setDMPEnabled(true);
-            mpu.setXAccelOffset(-1099);
-            mpu.setYAccelOffset(-14);
-            mpu.setZAccelOffset(454);
-            mpu.setXGyroOffset(83);
-            mpu.setYGyroOffset(-48);
-            mpu.setZGyroOffset(21);
-            //DEBUG_PRINT__("Sensor Inercial configurado com sucesso.\n");
-        } else {
-            //TODO: adicionar uma forma melhor de aviso. outro led?
-            //DEBUG_PRINT__("Erro na inicializacao do sensor Inercial!\n");
-        }
+  //Sensor Inercial
+  #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+  Wire.begin();
+  Wire.setClock(200000); //NOTE: Ajustar de acordo com arduino utilizado
+  #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+  Fastwire::setup(400, true);
+  #endif
+  if (mpu.testConnection()) {
+    mpu.initialize(); //Initializes the IMU
+    uint8_t ret = mpu.dmpInitialize(); //Initializes the DMP
+    delay(50);
+    if (ret == 0) {
+      mpu.setDMPEnabled(true);
+      mpu.setXAccelOffset(-1099);
+      mpu.setYAccelOffset(-14);
+      mpu.setZAccelOffset(454);
+      mpu.setXGyroOffset(83);
+      mpu.setYGyroOffset(-48);
+      mpu.setZGyroOffset(21);
+      //DEBUG_PRINT__("Sensor Inercial configurado com sucesso.\n");
     } else {
-        //DEBUG_PRINT__("Erro na conexao do sensor Inercial.\n");
+      //TODO: adicionar uma forma melhor de aviso. outro led?
+      //DEBUG_PRINT__("Erro na inicializacao do sensor Inercial!\n");
     }
+  } else {
+    //DEBUG_PRINT__("Erro na conexao do sensor Inercial.\n");
+  }
 }
 
 /**
- * Essa função é chamada pelo update a cada mpu_interval milisegundos
- */
+* Essa função é chamada pelo update a cada mpu_interval milisegundos
+*/
 void mpu6050_data_update() {
-    numbPackets = floor(mpu.getFIFOCount() / PSDMP);
-    ////DEBUG_PRINT__(numbPackets); //DEBUG_PRINT__(" - ");
-    if (numbPackets >= 24) {
-        mpu.resetFIFO();
-        //DEBUG_PRINT__("FIFO sensor 1 overflow!\n"); //TODO: mostrar isso de alguma forma. outro led?
-    } else {
-        while (numbPackets > 0) {
-            mpu.getFIFOBytes(fifoBuffer, PSDMP);
-            numbPackets--;
-        }
-        // display Euler angles in degrees
-        mpu.dmpGetQuaternion(&q, fifoBuffer);
-        mpu.dmpGetEuler(euler, &q);
-        mpu.dmpGetGravity(&gravity, &q);
-        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+  numbPackets = floor(mpu.getFIFOCount() / PSDMP);
+  ////DEBUG_PRINT__(numbPackets); //DEBUG_PRINT__(" - ");
+  if (numbPackets >= 24) {
+    mpu.resetFIFO();
+    //DEBUG_PRINT__("FIFO sensor 1 overflow!\n"); //TODO: mostrar isso de alguma forma. outro led?
+  } else {
+    while (numbPackets > 0) {
+      mpu.getFIFOBytes(fifoBuffer, PSDMP);
+      numbPackets--;
     }
+    // display Euler angles in degrees
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    mpu.dmpGetEuler(euler, &q);
+    mpu.dmpGetGravity(&gravity, &q);
+    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+  }
 }
 
 /**
- * Colocar dentro do loop, NÂO PODE TER DELAYS
- */
+* Colocar dentro do loop, NÂO PODE TER DELAYS
+*/
 void mpu6050_update(){
-    if (millis() - previousMPUMillis >= mpu_interval) {
-        previousMPUMillis = millis();
-        mpu6050_data_update(); //Realiza leitura e envia pacote(ou mostra) dados
-    }
+  if (millis() - previousMPUMillis >= mpu_interval) {
+    previousMPUMillis = millis();
+    mpu6050_data_update(); //Realiza leitura e envia pacote(ou mostra) dados
+  }
 }
 
 
 /**
- * Verifica se esta em subida, plano ou descida
- * @param  eixo   0 1 ou 2 indicando o index dos eixos x,y e z. Default: 1
- * @param  limiar Quantos graus ele considera rampa ou plano. Default: 15º
- * @return 1 se em subida, 0 se no plano e -1 se na descida
- */
+* Verifica se esta em subida, plano ou descida
+* @param  eixo   0 1 ou 2 indicando o index dos eixos x,y e z. Default: 1
+* @param  limiar Quantos graus ele considera rampa ou plano. Default: 15º
+* @return 1 se em subida, 0 se no plano e -1 se na descida
+*/
 int8_t mpu6050_verify(uint8_t eixo=1, uint8_t limiar=15){
-    if(abs(euler[eixo] * 180/M_PI) < limiar){
-        //digitalWrite(LED_PIN, 0); //E estabiliza
-        return 0;
-    } else if(euler[eixo] * 180/M_PI < -limiar){
-        //digitalWrite(LED_PIN, 1); //E sobe
-        return 1;
-    } else if(euler[eixo] * 180/M_PI > limiar){
-        //digitalWrite(LED_PIN, 1); //E desce
-        return -1;
-    } else {
-        //Caso não for contemplado acima
-        return 0;
-    }
+  if(abs(euler[eixo] * 180/M_PI) < limiar){
+    //digitalWrite(LED_PIN, 0); //E estabiliza
+    return 0;
+  } else if(euler[eixo] * 180/M_PI < -limiar){
+    //digitalWrite(LED_PIN, 1); //E sobe
+    return 1;
+  } else if(euler[eixo] * 180/M_PI > limiar){
+    //digitalWrite(LED_PIN, 1); //E desce
+    return -1;
+  } else {
+    //Caso não for contemplado acima
+    return 0;
+  }
 }
 
 /**
- * Exemplo de Uso:
- * //Bibliotecas
- * //Defines
- * //Variaveis
- * void setup(){
- *      mpu6050_init();
- * }
- * void loop(){
- *      mpu6050_update();
- *      if(mpu6050_verify(1,15) == 0){
- *          Serial.println("Estou no plano");
- *      } else {
- *          Serial.println("Não Estou no plano");
- *      }
- * }
- */
+* Exemplo de Uso:
+* //Bibliotecas
+* //Defines
+* //Variaveis
+* void setup(){
+*      mpu6050_init();
+* }
+* void loop(){
+*      mpu6050_update();
+*      if(mpu6050_verify(1,15) == 0){
+*          Serial.println("Estou no plano");
+*      } else {
+*          Serial.println("Não Estou no plano");
+*      }
+* }
+*/
 ///////////
 //Defines//
 ///////////
@@ -185,8 +185,11 @@ int amostra_anterior;
 int erro_atual;
 int erro_anterior;
 //Velocidade//
-int velocidade = 0;
+int velocidade;
 int respPI;
+int Vel_up = 160;   // Velocidade de subida
+int Vel_med = 90;   // Velocidade no plano
+int Vel_down = 60;  // Velocidade de descida
 int Vplus, Vless;
 int IN0A, IN1A, IN0B, IN1B;
 int ENA = 9; // motor esquerdo
@@ -198,10 +201,8 @@ int motor2_a = 5;
 int motor2_b = 7;
 
 //Bloco das funções//
+void frente(int velocidade) {
 
-void frente() {
-
-  velocidade = 80;
   analogWrite(ENA, abs(velocidade) );
   analogWrite(ENB, abs(velocidade) );
 
@@ -212,9 +213,8 @@ void frente() {
 }
 
 //curva compensada à esquerda//
-void curva_a_esquerda(int respPI) {
+void curva_a_esquerda(int velocidade, int respPI) {
 
-  velocidade = 80;
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
   analogWrite(ENA, Vplus );
@@ -226,9 +226,8 @@ void curva_a_esquerda(int respPI) {
   digitalWrite(motor2_b , HIGH);
 }
 //curva compensada à direita//
-void curva_a_direita(int respPI) {
+void curva_a_direita(int velocidade, int respPI) {
 
-  velocidade = 80;
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
   analogWrite(ENA, Vless );
@@ -241,9 +240,9 @@ void curva_a_direita(int respPI) {
 }
 
 //Giro a esquerda desligando um dos motores//
-void giro_a_esquerda(int respPI)
+void giro_a_esquerda(int velocidade, int respPI)
 {
-  velocidade = 135;
+
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
   analogWrite(ENA, Vplus );
@@ -256,9 +255,9 @@ void giro_a_esquerda(int respPI)
   // delay(2000);
 }
 //Giro a direita desligando um dos motores//
-void giro_a_direita(int respPI)
+void giro_a_direita(int velocidade, int respPI)
 {
-  velocidade = 135;
+
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
   analogWrite(ENA, Vless );
@@ -283,6 +282,7 @@ void motores_parados()
 void setup() {
 
   Serial.begin(9600);
+  mpu6050_init();
 
 }
 void loop() {
@@ -290,9 +290,10 @@ void loop() {
   leitura2 = analogRead(sensor_2);
   leitura3 = analogRead(sensor_3);
 
+  mpu6050_update();
 
   //teste sensores//
-#ifdef TESTE_SENSORES
+  #ifdef TESTE_SENSORES
   Serial.print(leitura1);
   Serial.print("\t");
   Serial.print(leitura2);
@@ -300,9 +301,9 @@ void loop() {
   Serial.println(leitura3);
   Serial.print("\t");
   Serial.println();
-#endif
+  #endif
 
-#ifdef PRINCIPAL
+  #ifdef PRINCIPAL
   //Bloco de montagem das estrutura do array_sensores//
   if (leitura1 > LIMIAR_SENSORES && leitura2 > LIMIAR_SENSORES && leitura3 > LIMIAR_SENSORES)
   {
@@ -350,12 +351,12 @@ void loop() {
     erro_array = 0;
 
   }
-#ifdef MOSTRAR_VALORES
+  #ifdef MOSTRAR_VALORES
   Serial.print("Valor do erro:");
   Serial.print("  ");
   Serial.print(erro_array);
   Serial.print("  ");
-#endif
+  #endif
   //Compensador PID//
   erro_atual = erro_array;
   resposta_p = erro_atual * Kp;
@@ -363,34 +364,48 @@ void loop() {
   resposta_d = Kd * (erro_atual - erro_anterior);
   Resposta_PID = resposta_p + resposta_i + resposta_d;
   erro_anterior = erro_atual;
-#ifdef MOSTRAR_VALORES
+  #ifdef MOSTRAR_VALORES
   Serial.print("\t");
   Serial.print("Resposta PID:");
   Serial.print("  ");
   Serial.print(Resposta_PID);
   Serial.print("  ");
-#endif
+  #endif
+
+  //Acelerômetro//
+  if(mpu6050_verify(1,15) == 0){
+    Serial.println("Estou no plano");
+    velocidade = Vel_med;
+  } else if(mpu6050_verify(1,15) == 1){
+    Serial.println("Estou subindo");
+    velocidade = Vel_up;
+  } else
+  {
+    Serial.println("Estou descendo");
+    velocidade = Vel_down;
+  }
+
   //PRINCIPAL//
   if (erro_array == 0) {
-    frente();
+    frente(velocidade);
   }
   if (erro_array == 1) {
-    curva_a_esquerda(Resposta_PID);
+    curva_a_esquerda(velocidade, Resposta_PID);
   }
   if (erro_array == 2) {
-    curva_a_esquerda(Resposta_PID);
+    curva_a_esquerda(velocidade, Resposta_PID);
   }
   if (erro_array == -1) {
-    curva_a_direita(Resposta_PID);
+    curva_a_direita(velocidade, Resposta_PID);
   }
   if (erro_array == -2) {
-    curva_a_direita(Resposta_PID);
+    curva_a_direita(velocidade, Resposta_PID);
   }
   if (erro_array == 3) {
     motores_parados();
     delay(5000);
   }
-#ifdef MOSTRAR_VALORES
+  #ifdef MOSTRAR_VALORES
   Serial.print("\t");
   Serial.print("V+:");
   Serial.print("  ");
@@ -400,8 +415,8 @@ void loop() {
   Serial.print("V-:");
   Serial.print("  ");
   Serial.println(Vless);
-#endif
+  #endif
 
-#endif
+  #endif
 
 }
