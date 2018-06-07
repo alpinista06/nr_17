@@ -9,7 +9,7 @@ Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]
 - Arduino NANO
 - Drive Ponte H l298
 - Sensor de refletância
-- Sensor inercial
+- Sensor inercial gy512
 - Micro motor 1000 rpm
 - Jumpers
 - Protoboard
@@ -29,11 +29,12 @@ Abaixo algumas imagens do primeiro protótipo criado
 
 ## Estratégia Empregada
 
-Neste primeiro teste foi montado um array de sensores. Para o controle PID desenvolvido , o setpoint é o sensor central e cada um dos laterais gera um certo erro pré-deteminado. Abaixo uma imagem do array.
+Para projetar este robô autônomo , em especial para o IIV TUR, listamos os obstáculos a serem vencidos em cada check point para então projetá-lo levando em conta as especificações apresentadas.
+Foi montado um array de sensores. Para o controle PID desenvolvido, o setpoint é o sensor central e cada um dos laterais gera um certo erro pré-deteminado. Abaixo uma imagem do array.
 
 ![](img/nr17_array_001.jpg)
 
-De acordo com os erros gerados no percurso um tratamento de software para compensar o sistema é realizado. Por tentativa e erro as constantes do compensador serão refinadas.
+De acordo com os erros gerados no percurso um tratamento de software para compensar o sistema é realizado. Por tentativa e erro as constantes do compensador serão refinadas e com esta abordagem dois obstáculos são vencidos.
 
 ## license
 
