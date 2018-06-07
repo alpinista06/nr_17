@@ -1,14 +1,15 @@
 # Projeto nr 17
 
-Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica]() da Universidade Federal de Uberlândia. O nome deste robô foi inspirado no grande mito, Androide nr 17 de dragon ball super.
- 
+Projeto de robo seguidor de linha para o VII TUR , realizado pelo [PET eletrica](https://peteletricaufu.wordpress.com/) da Universidade Federal de Uberlândia. O nome deste robô foi inspirado no grande mito, Androide nr 17 de dragon ball super.
+
 ![](img/nr_17.jpg)
 
 ## Materiais utilizados
 
-- Arduino UNO R3
+- Arduino NANO
 - Drive Ponte H l298
 - Sensor de refletância
+- Sensor inercial
 - Micro motor 1000 rpm
 - Jumpers
 - Protoboard
@@ -28,7 +29,7 @@ Abaixo algumas imagens do primeiro protótipo criado
 
 ## Estratégia Empregada
 
-Neste primeiro teste foi montado um array de 3 sensores. Para o controle PID desenvolvido , o setpoint é o sensor central e cada um dos laterais gera um certo erro pré-deteminado. Abaixo uma imagem do array.
+Neste primeiro teste foi montado um array de sensores. Para o controle PID desenvolvido , o setpoint é o sensor central e cada um dos laterais gera um certo erro pré-deteminado. Abaixo uma imagem do array.
 
 ![](img/nr17_array_001.jpg)
 
