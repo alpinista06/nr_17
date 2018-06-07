@@ -1,11 +1,11 @@
 ///////////
 //Defines//
 ///////////
-#define limiar_sensores 800
+#define LIMIAR_SENSORES 800
 
-//#define teste_sensores
-#define principal
-//#define Mostrar_valores
+//#define TESTE_SENSORES
+#define PRINCIPAL
+//#define MOSTRAR_VALORES
 
 /////////////////
 //Dados globais//
@@ -45,8 +45,7 @@ int motor1_b = 6;
 int motor2_a = 5;
 int motor2_b = 7;
 
-
-
+//Bloco das funções//
 
 void frente() {
 
@@ -141,7 +140,7 @@ void loop() {
 
 
   //teste sensores//
-#ifdef teste_sensores
+#ifdef TESTE_SENSORES
   Serial.print(leitura1);
   Serial.print("\t");
   Serial.print(leitura2);
@@ -151,27 +150,27 @@ void loop() {
   Serial.println();
 #endif
 
-#ifdef principal
+#ifdef PRINCIPAL
   //Bloco de montagem das estrutura do array_sensores//
-  if (leitura1 > limiar_sensores && leitura2 > limiar_sensores && leitura3 > limiar_sensores)
+  if (leitura1 > LIMIAR_SENSORES && leitura2 > LIMIAR_SENSORES && leitura3 > LIMIAR_SENSORES)
   {
     array_sensores = 0b111;
-  } else if (leitura1 < limiar_sensores && leitura2 > limiar_sensores && leitura3 < limiar_sensores)
+  } else if (leitura1 < LIMIAR_SENSORES && leitura2 > LIMIAR_SENSORES && leitura3 < LIMIAR_SENSORES)
   {
     array_sensores = 0b010;
-  } else if (leitura1 < limiar_sensores && leitura2 < limiar_sensores && leitura3 > limiar_sensores)
+  } else if (leitura1 < LIMIAR_SENSORES && leitura2 < LIMIAR_SENSORES && leitura3 > LIMIAR_SENSORES)
   {
     array_sensores = 0b001;
-  } else if (leitura1 < limiar_sensores && leitura2 > limiar_sensores && leitura3 < limiar_sensores)
+  } else if (leitura1 < LIMIAR_SENSORES && leitura2 > LIMIAR_SENSORES && leitura3 < LIMIAR_SENSORES)
   {
     array_sensores = 0b010;
-  } else if (leitura1 < limiar_sensores && leitura2 > limiar_sensores && leitura3 > limiar_sensores)
+  } else if (leitura1 < LIMIAR_SENSORES && leitura2 > LIMIAR_SENSORES && leitura3 > LIMIAR_SENSORES)
   {
     array_sensores = 0b011;
-  } else if (leitura1 > limiar_sensores && leitura2 < limiar_sensores && leitura3 < limiar_sensores)
+  } else if (leitura1 > LIMIAR_SENSORES && leitura2 < LIMIAR_SENSORES && leitura3 < LIMIAR_SENSORES)
   {
     array_sensores = 0b100;
-  } else if (leitura1 > limiar_sensores && leitura2 > limiar_sensores && leitura3 < limiar_sensores)
+  } else if (leitura1 > LIMIAR_SENSORES && leitura2 > LIMIAR_SENSORES && leitura3 < LIMIAR_SENSORES)
   {
     array_sensores = 0b110;
   }
@@ -199,7 +198,7 @@ void loop() {
     erro_array = 0;
 
   }
-#ifdef Mostrar_valores
+#ifdef MOSTRAR_VALORES
   Serial.print("Valor do erro:");
   Serial.print("  ");
   Serial.print(erro_array);
@@ -212,14 +211,14 @@ void loop() {
   resposta_d = Kd * (erro_atual - erro_anterior);
   Resposta_PID = resposta_p + resposta_i + resposta_d;
   erro_anterior = erro_atual;
-#ifdef Mostrar_valores
+#ifdef MOSTRAR_VALORES
   Serial.print("\t");
   Serial.print("Resposta PID:");
   Serial.print("  ");
   Serial.print(Resposta_PID);
   Serial.print("  ");
 #endif
-  //principal//
+  //PRINCIPAL//
   if (erro_array == 0) {
     frente();
   }
@@ -239,7 +238,7 @@ void loop() {
     motores_parados();
     delay(5000);
   }
-#ifdef Mostrar_valores
+#ifdef MOSTRAR_VALORES
   Serial.print("\t");
   Serial.print("V+:");
   Serial.print("  ");
