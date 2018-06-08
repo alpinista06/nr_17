@@ -153,7 +153,7 @@ int8_t mpu6050_verify(uint8_t eixo=1, uint8_t limiar=15){
 ///////////
 //Defines//
 ///////////
-#define LIMIAR_SENSORES 800
+#define LIMIAR_SENSORES 750
 
 //#define TESTE_SENSORES
 #define PRINCIPAL
@@ -171,10 +171,10 @@ int leitura1;
 int leitura2;
 int leitura3;
 //Compensador PID//
-int A = 0.5;
-int Kp = 20;
+int A = 0.7;
+int Kp = 25;
 int Ki = 35;
-int Kd = 15;
+int Kd = 20;
 int resposta_p;
 int resposta_i;
 int resposta_d;
@@ -188,7 +188,7 @@ int erro_anterior;
 int velocidade;
 int respPI;
 int Vel_up = 255;   // Velocidade de subida
-int Vel_med = 120;   // Velocidade no plano
+int Vel_med = 110;   // Velocidade no plano
 int Vel_down = 80;  // Velocidade de descida
 int Vplus, Vless;
 int IN0A, IN1A, IN0B, IN1B;
