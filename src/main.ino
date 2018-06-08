@@ -119,13 +119,13 @@ void mpu6050_update(){
 */
 int8_t mpu6050_verify(uint8_t eixo=1, uint8_t limiar=15){
   if(abs(euler[eixo] * 180/M_PI) < limiar){
-    digitalWrite(13, 0); //E estabiliza
+    //digitalWrite(13, 0); //E estabiliza
     return 0;
   } else if(euler[eixo] * 180/M_PI < -limiar){
-    digitalWrite(13, 1); //E sobe
+    //digitalWrite(13, 1); //E sobe
     return 1;
   } else if(euler[eixo] * 180/M_PI > limiar){
-    digitalWrite(13, 1); //E desce
+    //digitalWrite(13, 1); //E desce
     return -1;
   } else {
     //Caso não for contemplado acima
@@ -187,9 +187,9 @@ int erro_anterior;
 //Velocidade//
 int velocidade;
 int respPI;
-int Vel_up = 160;   // Velocidade de subida
-int Vel_med = 90;   // Velocidade no plano
-int Vel_down = 60;  // Velocidade de descida
+int Vel_up = 255;   // Velocidade de subida
+int Vel_med = 120;   // Velocidade no plano
+int Vel_down = 80;  // Velocidade de descida
 int Vplus, Vless;
 int IN0A, IN1A, IN0B, IN1B;
 int ENA = 9; // motor esquerdo
@@ -280,18 +280,34 @@ void motores_parados()
 }
 
 void setup() {
-
   Serial.begin(9600);
   pinMode(13, OUTPUT);
   mpu6050_init();
-
 }
+
 void loop() {
   leitura1 = analogRead(sensor_1);
   leitura2 = analogRead(sensor_2);
   leitura3 = analogRead(sensor_3);
 
-  mpu6050_update();
+  mpu6050_update(); //Lê o sensor inercial
+
+  //Acelerômetro//
+  if(mpu6050_verify(1,15) == 0){
+    Serial.println("Estou no plano");
+    digitalWrite(13, 0); //plano
+    velocidade = Vel_med;
+  } else if(mpu6050_verify(1,15) == 1){
+    Serial.println("Estou subindo");
+    digitalWrite(13, 1); //E sobe
+    velocidade = Vel_up;
+    frente(velocidade);
+  } else
+  {
+    Serial.println("Estou descendo");
+    digitalWrite(13, 1); //E desce
+    velocidade = Vel_down;
+  }
 
   //teste sensores//
   #ifdef TESTE_SENSORES
@@ -373,38 +389,25 @@ void loop() {
   Serial.print("  ");
   #endif
 
-  //Acelerômetro//
-  if(mpu6050_verify(1,15) == 0){
-    Serial.println("Estou no plano");
-    velocidade = Vel_med;
-  } else if(mpu6050_verify(1,15) == 1){
-    Serial.println("Estou subindo");
-    velocidade = Vel_up;
-  } else
-  {
-    Serial.println("Estou descendo");
-    velocidade = Vel_down;
-  }
-
   //PRINCIPAL//
   if (erro_array == 0) {
     frente(velocidade);
   }
   if (erro_array == 1) {
-    curva_a_esquerda(velocidade, Resposta_PID);
+    giro_a_esquerda(velocidade, Resposta_PID); // erro positivo virar à esqerda
   }
   if (erro_array == 2) {
-    curva_a_esquerda(velocidade, Resposta_PID);
+    giro_a_esquerda(velocidade, Resposta_PID);
   }
   if (erro_array == -1) {
-    curva_a_direita(velocidade, Resposta_PID);
+    giro_a_direita(velocidade, Resposta_PID); // erro negativo virar à esquerda
   }
   if (erro_array == -2) {
-    curva_a_direita(velocidade, Resposta_PID);
+    giro_a_direita(velocidade, Resposta_PID);
   }
   if (erro_array == 3) {
     motores_parados();
-    delay(5000);
+    //delay(5000);
   }
   #ifdef MOSTRAR_VALORES
   Serial.print("\t");
