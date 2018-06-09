@@ -203,6 +203,8 @@ int motor2_b = 7;
 //Bloco das funções//
 void frente(int velocidade) {
 
+
+  velocidade = 90;
   analogWrite(ENA, abs(velocidade) );
   analogWrite(ENB, abs(velocidade) );
 
@@ -242,7 +244,7 @@ void curva_a_direita(int velocidade, int respPI) {
 //Giro a esquerda desligando um dos motores//
 void giro_a_esquerda(int velocidade, int respPI)
 {
-
+  velocidade = 130;
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
   analogWrite(ENA, Vplus );
@@ -257,7 +259,7 @@ void giro_a_esquerda(int velocidade, int respPI)
 //Giro a direita desligando um dos motores//
 void giro_a_direita(int velocidade, int respPI)
 {
-
+  velocidade = 130;
   Vplus = velocidade + respPI;
   Vless = velocidade - respPI;
   analogWrite(ENA, Vless );
@@ -296,7 +298,7 @@ void loop() {
   if(mpu6050_verify(1,15) == 0){
     Serial.println("Estou no plano");
     digitalWrite(13, 0); //plano
-    velocidade = Vel_med;
+    //velocidade = Vel_med;
   } else if(mpu6050_verify(1,15) == 1){
     Serial.println("Estou subindo");
     digitalWrite(13, 1); //E sobe
