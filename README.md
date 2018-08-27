@@ -77,7 +77,6 @@ A ideia inicial era de usar uma roda tipo esfera deslizante no eixo frontal, por
 
 Durante os testes observamos uma dificuldade em estabilizar o robô, esta dificuldade pode ser atribuída à posição dos sensores, que ficaram demasiadamente próximos ao eixo dos motores exigindo um tempo de resposta maior do sistema de controle. Apesar das dificuldades o melhor desempenho obtido nos rendeu o 4 lugar entre 13 equipes inscritas no torneio.
 
-
 ## license
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
