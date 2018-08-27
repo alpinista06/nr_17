@@ -49,7 +49,7 @@ Os resultados obtidos com este protótipo foram satisfatórios e podem ser visto
 
 Com isso passamos para a segunda etapa, execução do projeto final.
 
-- [x] 2° Execução do projeto final
+### - [x] 2° Execução do projeto final
 
 **Algumas alterações** foram realizadas para buscar um melhor desempenho durante comeptição, entre elas estão a troca dos motores de 1000 rpm para motores de 300 rpm, com essa alteração conseguimos mais estabilidade no controle do robô, adicionamos 2 sensores óptico-reflexivos. O sensor inercial foi retirado, uma vez que com os motores de 300 rpm o torque obtido foi suficiente para vencermos a rampa sem esforço extra.
 Com as mudanças realizadas os resultados se potencializaram, o robô ganhou torque, velocidade e estabilidade. O sistema de controle discreto projetado foi um [controle PD](https://pt.wikipedia.org/wiki/Controlador_proporcional_integral_derivativo) (proporcional-derivativo), o motivo pelo qual foi escolhida essa combinação foi que, em teoria e podendo ser observado na pratica, a ação integral zera o erro de regime permanente como na pista proposta não temos nenhum trecho que possa ser considerado análogo a um regime permanente a ação integral torna-se desnecessária.
